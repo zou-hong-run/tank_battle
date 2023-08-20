@@ -14,7 +14,7 @@ export default class Bullet extends BaseObjAbstract {
         let updatePosX = this.getPosX();
         let updatePosY = this.getPosY();
         let isOutRange = false;
-        // star2 子弹混乱
+        // 摧毁star2方块 产生子弹混乱特效
         this.game.randomBullet && this.setDirection(Utils.getRandomDirection())
         // 移动模式
         let moveStrategy = {

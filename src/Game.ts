@@ -29,14 +29,21 @@ export default class Game {
             [MapWallEle.grass, MapWallEle.grass, MapWallEle.star, MapTankEle.enemy1, MapWallEle.grass, MapWallEle.grass, MapTankEle.my, MapWallEle.brick, MapWallEle.boss, MapWallEle.brick, MapWallEle.grass, MapWallEle.grass, MapWallEle.grass, MapWallEle.grass, MapWallEle.grass, MapWallEle.grass, MapWallEle.grass],
         ]
     ] as const;
+    // 游戏关卡，对应mapArr
     public gameLevel = 0;
+    // 地图宽高 vm vh
     public mapHeight = 100;
-    public mapWidth = 80;
+    public mapWidth = 90;
+    // 地图每个方块宽高
     public mapItemWidth = (this.mapWidth / this.mapArr[0][0].length);
     public mapItemHeight = (this.mapHeight / this.mapArr[0].length);
+
+    // html元素容器
     public mapContainerEle = document.querySelector("#container_center") as HTMLDivElement;
+    // 音乐
     public music1:HTMLAudioElement|undefined;
     public music2:HTMLAudioElement|undefined;
+    // 特殊效果触发
     public randomBullet:boolean = false;
 
     init() {
@@ -53,6 +60,7 @@ export default class Game {
         // 拿到数据对应的地图，然后将对应的元素渲染成html元素，批量渲染到html中
         let mapArr = this.mapArr[this.gameLevel];
         mapArr.forEach((itemCol, colIndex) => {
+            //  mapEleName地图方块的名字
             itemCol.forEach((mapEleName, rowIndex) => {
                 let posX = rowIndex * this.mapItemWidth;
                 let posY = colIndex * this.mapItemHeight;
@@ -101,24 +109,26 @@ export default class Game {
     ): HTMLDivElement {
         // 创建 对象（tank,wall） 元素所需要参数
         let deg = Utils.convertDirectionToDeg(direction);
-        // 根据分类 创建对应的 对象
+        // 根据mapEleName 判断分类 然后创建对应的 tank|wall|bullet对象
         let objEle = Utils.createObjEleByMapEleName(mapEleName, width, height, posX, posY, direction, game, parent, speed, blood, level)!;
-        // 根据元素名 创建对应的 动画
+        // 根据mapEleName 创建对应的 动画
         let animation = Utils.createAnimationByMapEleName(mapEleName);
-        // 根据分类 创建对应的图片路径
+        // 根据mapEleName 创建对应的图片路径
         let img = Utils.createImgByMapEle(mapEleName);
+        // 记录产生的obj类型
         let type = objEle;
-        // 根据类别和坐标位置 加工 返回html元素
+        // 创建对应的HTML元素
         let htmlEle = Utils.createHTMLEle(objEle.getWidth(), objEle.getHeight(), objEle.getPosX(), objEle.getPosY(), img, deg, animation, type);
         // 将html元素挂载到 objEle上
         objEle.setHtmlEle(htmlEle);
-        // 将html渲染到游戏地图中
+        // 返回html，最终html将渲染到游戏地图中
         return htmlEle;
     }
-    // 添加按钮事件
+    // 添加按钮事件 控制玩家坦克移动
     initButtonClickEvent() {
         // console.log(this.my);
         document.addEventListener("keypress", (e) => {
+            // 初始化音乐
             this.music1 = new Music().createAudio("explosion.mp3")
             this.music2 = new Music().createAudio("attack.mp3")
             let code = e.code;

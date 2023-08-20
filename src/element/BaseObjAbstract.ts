@@ -43,6 +43,7 @@ export default abstract class BaseObjAbstract {
     setLevel(level: number) { this.level = level }
     setBlood(blood: number) { 
         this.blood = blood;
+        // 将更新好的血量 显示在网页上
         if(this.getMapEleName() === MapTankEle.my){
             let myblood_conten = document.querySelector("#myblood_content")!;
             myblood_conten.innerHTML = blood.toPrecision(4) + ""+"";
